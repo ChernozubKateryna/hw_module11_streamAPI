@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,7 +11,13 @@ public class StreamTest {
         String[] stringArray = new String[]{"1, 2, 0", "4, 5"};
         getSortedIntArray(stringArray);
 
+        Stream<Long> longStream = generator(25214903917L, 11L, 48L, 0);
+        longStream.forEach(System.out::println);
 
+        Stream<String> first = Stream.of("one", "two", "three", "four");
+        Stream<String> second = Stream.of("1", "2", "3");
+        Stream<String> resultStream = zip(first, second);
+        resultStream.peek(System.out::println).collect(Collectors.toList());
     }
 
     //task1
@@ -48,5 +51,29 @@ public class StreamTest {
                 .sorted();
 
         System.out.println(numberStream.collect(Collectors.toList()));
+    }
+
+    //task4
+    public static Stream<Long> generator(long a, long c, long m, long seed) {
+        m = (long) Math.pow(2, m);
+        long finalM = m;
+        Stream<Long> streamFromIterate =  Stream.iterate(seed, x -> (a * x + c) % finalM)
+                .limit(10);
+        return streamFromIterate;
+    }
+
+    //task5
+    public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
+        List<T> resultList = new ArrayList<>();
+
+        Iterator<T> firstIterator = first.iterator();
+        Iterator<T> secondIterator = second.iterator();
+
+        while (firstIterator.hasNext() && secondIterator.hasNext()) {
+            resultList.add(firstIterator.next());
+            resultList.add(secondIterator.next());
+        }
+
+        return resultList.stream();
     }
 }
