@@ -55,11 +55,9 @@ public class StreamTest {
 
     //task4
     public static Stream<Long> generator(long a, long c, long m, long seed) {
-        m = (long) Math.pow(2, m);
-        long finalM = m;
-        Stream<Long> streamFromIterate =  Stream.iterate(seed, x -> (a * x + c) % finalM)
+        final long powM = (long) Math.pow(2, m);
+        return Stream.iterate(seed, x -> (a * x + c) % powM)
                 .limit(10);
-        return streamFromIterate;
     }
 
     //task5
@@ -73,7 +71,6 @@ public class StreamTest {
             resultList.add(firstIterator.next());
             resultList.add(secondIterator.next());
         }
-
         return resultList.stream();
     }
 }
