@@ -5,11 +5,12 @@ import java.util.stream.Stream;
 public class StreamTest {
     public static void main(String[] args) {
         List<String> names = Arrays.asList("Ann", "Bob", "Clark", "Din", "Ell");
-        getOddIndexName(names);
-        getNamesInUpperCase(names);
+        System.out.println(getOddIndexName(names));
+
+        System.out.println(getNamesInUpperCase(names));
 
         String[] stringArray = new String[]{"1, 2, 0", "4, 5"};
-        getSortedIntArray(stringArray);
+        System.out.println(getSortedIntArray(stringArray));
 
         Stream<Long> longStream = generator(25214903917L, 11L, 48L, 0);
         longStream.forEach(System.out::println);
@@ -21,36 +22,36 @@ public class StreamTest {
     }
 
     //task1
-    public static void getOddIndexName(List<String> names) {
+    public static String getOddIndexName(List<String> names) {
         Stream<String> nameStream = names.stream().filter((name) -> names.indexOf(name)%2 == 0);
-        System.out.println(nameStream.collect(Collectors.toList()));
+        List<String> resultList = nameStream.collect(Collectors.toList());
+        String result = resultList.stream()
+                .map(n -> String.valueOf(n))
+                .collect(Collectors.joining(", ", "\"", "\""));
+        return result;
     }
 
     //task2
-    private static void getNamesInUpperCase(List<String> names) {
+    private static List<String> getNamesInUpperCase(List<String> names) {
         Stream<String> nameStream = names.stream()
                 .map(n -> n.toUpperCase())
                 .sorted(Comparator.reverseOrder());
-        System.out.println(nameStream.collect(Collectors.toList()));
+        List<String> result = nameStream.collect(Collectors.toList());
+        return result;
     }
 
     //task3
-    private static void getSortedIntArray(String[] stringArray) {
-        String allString = " ";
-        for(String string : stringArray) {
-            allString += string + ",";
-        }
-
-        System.out.println(allString); // 1, 2, 0, 4, 5,
-
-        List<String> numbers = Arrays.asList(allString.split(","));
-        System.out.println(numbers);
-
-        Stream<String> numberStream = numbers.stream()
+    private static String getSortedIntArray(String[] stringArray) {
+        List<String> stringStream = Arrays.stream(stringArray)
+                .map(s -> s.split(", "))
+                .flatMap(Arrays::stream)
                 .map(String::trim)
-                .sorted();
+                .sorted()
+                .collect(Collectors.toList());
 
-        System.out.println(numberStream.collect(Collectors.toList()));
+        return stringStream.stream()
+                .map(n -> String.valueOf(n))
+                .collect(Collectors.joining(", ", "\"", "\""));
     }
 
     //task4
